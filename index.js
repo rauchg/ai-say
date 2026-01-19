@@ -2,9 +2,41 @@
 
 import { WebSocket } from "ws";
 import { randomUUID } from "crypto";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import Speaker from "@mastra/node-speaker";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, "package.json"), "utf8"));
+
+const help = `
+ai-say v${pkg.version}
+
+Text-to-speech CLI powered by Cartesia AI
+
+Usage:
+  ai-say [options] <text>
+  echo "text" | ai-say
+
+Options:
+  -m, --model <model>  TTS model (default: sonic-turbo-2025-03-07)
+  -h, --help           Show this help
+  -v, --version        Show version
+`.trim();
+
 const args = process.argv.slice(2);
+
+if (args.includes("-h") || args.includes("--help")) {
+  console.log(help);
+  process.exit(0);
+}
+
+if (args.includes("-v") || args.includes("--version")) {
+  console.log(pkg.version);
+  process.exit(0);
+}
+
 let model = "sonic-turbo-2025-03-07";
 const textParts = [];
 
@@ -28,8 +60,7 @@ if (!text && !process.stdin.isTTY) {
 }
 
 if (!text) {
-  console.error("Usage: ai-say [-m model] <text>");
-  console.error("       echo 'text' | ai-say");
+  console.log(help);
   process.exit(1);
 }
 
