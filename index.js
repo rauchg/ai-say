@@ -22,7 +22,7 @@ Usage:
   echo "text" | ai-say
 
 Options:
-  -m, --model <model>  TTS model (default: sonic-turbo-2025-03-07)
+  -m, --model <model>  TTS model (default: sonic-3)
   -v, --voice <voice>  Voice ID or name (default: Barbershop Man)
   --list-voices        List available voices
   -h, --help           Show this help
@@ -139,7 +139,7 @@ if (args.includes("--list-voices")) {
   process.exit(0);
 }
 
-let model = "sonic-turbo-2025-03-07";
+let model = "sonic-3";
 let voice = DEFAULT_VOICE;
 const textParts = [];
 
@@ -202,6 +202,11 @@ ws.on("open", () => {
 
 ws.on("message", (data) => {
   const msg = JSON.parse(data.toString());
+
+  if (msg.type === "error" || msg.error) {
+    console.error("Error:", msg.error || msg.message || "Unknown error");
+    process.exit(1);
+  }
 
   if (msg.type === "chunk" && msg.data) {
     const audio = Buffer.from(msg.data, "base64");

@@ -1,6 +1,6 @@
 {
   "name": "ai-say-cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Text-to-speech CLI powered by Cartesia AI with real-time streaming audio",
   "type": "module",
   "bin": {
